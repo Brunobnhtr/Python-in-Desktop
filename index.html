@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Periodic Table of Elements - HTML/CSS</title>
+  <link rel="stylesheet" href="css/normalize.min.css">
+  <link rel="stylesheet" href="css/style.css"> 
+  <script src="css\methods\pyodide\pyodide.js"></script>
+  <script>
+    // Recursos para carregamento online e offline
+    const resources = {
+      online: [
+        { type: "script", src: "https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js" },
+      ],
+      offline: [
+        { type: "script", src: "css/methods/pyodide/pyodide.js" },
+      ],
+    };
+  
+    // Função para carregar os recursos (Pyodide) dinamicamente
+    function loadPyodideInstance(mode) {
+      const pyodideScript = resources[mode].find(resource => resource.type === "script");
+  
+      return new Promise((resolve, reject) => {
+        // Remove scripts antigos para evitar conflitos
+        const existingScript = document.querySelector("script[src*='pyodide.js']");
+        if (existingScript) {
+          existingScript.remove();
+        }
+  
+        let script = document.createElement("script");
+        script.src = pyodideScript.src;
+        script.onload = () => {
+          if (typeof loadPyodide !== "undefined") {
+            loadPyodide()
+              .then(pyodide => {
+                window.pyodide = pyodide; // Torna o Pyodide acessível globalmente
+                pyodide.loadPackage(["numpy", "pandas", "pytz"])
+                  .then(() => resolve())
+                  .catch(reject);
+              })
+              .catch(reject);
+          } else {
+            reject("Erro: Pyodide não carregado corretamente.");
+          }
+        };
+        script.onerror = () => reject("Erro ao carregar o script Pyodide.");
+        document.head.appendChild(script);
+      });
+    }
+  
+    // Função para lidar com a seleção do modo
+    document.addEventListener("DOMContentLoaded", () => {
+      const radioButtons = document.querySelectorAll("input[name='modeSelector']");
+  
+      radioButtons.forEach(radio => {
+        radio.addEventListener("change", function () {
+          const mode = this.id; // 'online' ou 'offline'
+  
+          loadPyodideInstance(mode)
+            .then(() => {
+              console.log(`Pyodide carregado no modo: ${mode}`);
+            })
+            .catch(error => {
+              console.error("Erro ao carregar o Pyodide:", error);
+            });
+        });
+      });
+  
+      // Carrega o modo padrão (Offline)
+      document.getElementById("online").checked = true; // Define Online como padrão
+      loadPyodideInstance("online")
+        .then(() => console.log("Pyodide carregado no modo padrão: online"))
+        .catch(error => console.error("Erro ao carregar o Pyodide:", error));
+    });
+  </script>
+  
+  
+
+</head>
+
+<body>
+<!-- partial:index.partial.html -->
+<!-- ELEMENT MIXIN TEMPLATE-->
+<!-- PLACEHOLDER MIXIN TEMPLATE-->
+<div class="wrapper">
+  <input class="category-toggle" type="radio" id="alkali-metals" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="alkaline-earth-metals" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="lanthanoids" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="actinoids" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="transition-metals" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="post-transition-metals" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="metalloids" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="other-nonmetals" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="noble-gasses" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  <input class="category-toggle" type="radio" id="unknown" name="categories"/>
+  <input class="category-cancel" type="radio" id="cancel" name="categories"/>
+  
+    
+  <div class="periodic-table">
+   
+    
+    <div class="alkali-metal c1 r9" data-content="offline">
+      <input class="activate" type="radio" name="modeSelector" id="offline" />
+      <label for="offline">
+        <div class="square">          
+          <div class="label">            
+            <div class="name">Offline</div>
+          </div>
+        </div>
+      </label>
+    </div>   
+    <div class="alkali-metal c2 r9" data-content="online">
+      <input class="activate" type="radio" name="modeSelector" id="online" />
+      <label for="online">
+        <div class="square">          
+          <div class="label">            
+            <div class="name">Online</div>
+          </div>
+        </div>
+      </label>
+    </div>
+    
+
+
+  
+
+  
+    <!-- PYTHON-->
+    <div class="imagem c12 r4" >
+      <img src="css\Image\1.png" >
+    </div>
+
+    <div class="imagem c11 r4" >
+      <img src="css\Image\2.png" >
+    </div>
+
+    <div class="imagem c10 r4" >
+      <img src="css\Image\3.png" >
+    </div>
+
+    <div class="imagem c9 r4" >
+      <img src="css\Image\4.png" >
+    </div>
+
+    <div class="imagem c8 r4" >
+      <img src="css\Image\5.png" >
+    </div>
+
+    <div class="imagem c7 r4" >
+      <img src="css\Image\6.png" >
+    </div>
+
+    <div class="imagem c6 r4" >
+      <img src="css\Image\7.png" >
+    </div>
+
+    <div class="imagem c5 r4" >
+      <img src="css\Image\8.png" >
+    </div>    
+
+    <div class="imagem c3 r4" >
+      <img src="css\Image\10.png" >
+    </div>
+
+    <div class="imagem c12 r3" >
+      <img src="css\Image\11.png" >
+    </div>
+
+    <div class="imagem c11 r3" >
+      <img src="css\Image\12.png" >
+    </div>
+
+    <div class="imagem c10 r3" >
+      <img src="css\Image\13.png" >
+    </div>
+
+    <div class="imagem c9 r3" >
+      <img src="css\Image\14.png" >
+    </div>
+
+    <div class="imagem c8 r3" >
+      <img src="css\Image\15.png" >
+    </div>
+
+    <div class="imagem c7 r3" >
+      <img src="css\Image\16.png" >
+    </div>
+
+    <div class="imagem c6 r3" >
+      <img src="css\Image\17.png" >
+    </div>
+
+    <div class="imagem c5 r3" >
+      <img src="css\Image\18.png" >
+    </div>
+
+    <div class="imagem c4 r3" >
+      <img src="css\Image\19.png" >
+    </div>
+
+    <div class="imagem c3 r3" >
+      <img src="css\Image\20.png" >
+    </div>
+    
+
+    <div class="imagem c12 r2" >
+      <img src="css\Image\21.png" >
+    </div>
+
+    <div class="imagem c11 r2" >
+      <img src="css\Image\22.png" >
+    </div>
+
+    <div class="imagem c10 r2" >
+      <img src="css\Image\23.png" >
+    </div>
+    
+    
+    <div class="imagem c9 r2" >
+      <img src="css\Image\24.png" >
+    </div>
+
+    <div class="imagem c8 r2" >
+      <img src="css\Image\25.png" >
+    </div>
+
+    <div class="imagem c7 r2" >
+      <img src="css\Image\26.png" >
+    </div>
+
+    <div class="imagem c6 r2" >
+      <img src="css\Image\27.png" >
+    </div>
+
+    <div class="imagem c5 r2" >
+      <img src="css\Image\28.png" >
+    </div>   
+
+    <div class="imagem c4 r2" >
+      <img src="css\Image\29.png" >
+    </div>
+
+    <div class="imagem c3 r2" >
+      <img src="css\Image\30.png" >
+    </div>
+
+         
+     
+
+    <div class="element alkali-metal c1 r2" data-content="print">
+      <input class="activate" type="radio" name="elements" id="element1"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">        
+        <div class="atomic-number">1</div>
+        <div class="label">
+          <div class="symbol">P</div>
+          <div class="name">Print</div>
+        </div>        
+        <div class="content">
+        </div>  
+      </div>  
+    </div>
+    
+
+    <div class="element alkali-metal c18 r2" data-content="comentario">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">        
+        <div class="atomic-number">2</div>
+        <div class="label">
+          <div class="symbol">Co</div>
+          <div class="name">Comentário</div>
+        </div>
+        <div class="content">
+        </div>         
+      </div>
+    </div>
+    
+    <div class="element alkali-metal c1 r3" data-content="Tipo de dados 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">        
+        <div class="atomic-number">3</div>
+        <div class="label">
+          <div class="symbol">Td<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Tipo de Dados</div>
+        </div> 
+        <div class="content">
+        </div>       
+      </div>
+    </div>
+    <div class="element alkali-metal c2 r3" data-content="Tipo de dados 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">           
+        <div class="atomic-number">4</div>
+        <div class="label">
+          <div class="symbol">Td<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Tipo de Dados</div>
+        </div>
+        <div class="content">
+        </div>
+        </div>
+    </div>
+    <div class="element alkali-metal c13 r3" data-content="operadores aritmeticos">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">           
+        <div class="atomic-number">5</div>
+        <div class="label">
+          <div class="symbol">O<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Operador Aritmético</div>
+        </div>
+        <div class="content">
+        </div>
+        </div>
+    </div>
+    <div class="element alkali-metal c14 r3" data-content="operadores de comparação">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">6</div>
+        <div class="label">
+          <div class="symbol">O<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Operador de Comparação</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkali-metal c15 r3" data-content="operador de atribuição">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square"> 
+        <div class="atomic-number">7</div>
+        <div class="label">
+          <div class="symbol">O<sup style="font-size: 0.6em;">3</sup></div>
+          <div class="name">Operador de atribuição</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkali-metal c16 r3" data-content="operadores logicos">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">         
+        <div class="atomic-number">8</div>
+        <div class="label">
+          <div class="symbol">O<sup style="font-size: 0.6em;">4</sup></div>
+          <div class="name">Operador Lógico</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkali-metal c17 r3"   data-content="operador de identidade">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">9</div>
+        <div class="label">
+          <div class="symbol">O<sup style="font-size: 0.6em;">5</sup></div>
+          <div class="name">Operador de Identidade</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkali-metal c18 r3" data-content="operador bit a bit">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">10          
+        </div>
+        <div class="label">
+          <div class="symbol">O<sup style="font-size: 0.6em;">6</sup></div>
+          <div class="name">Operador de Bit</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkali-metal c1 r4" data-content="variaveis 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square"> 
+        <div class="atomic-number">11</div>
+        <div class="label">
+          <div class="symbol">V<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Variáveis</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkali-metal c2 r4" data-content="variaveis 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square"> 
+        <div class="atomic-number">12</div>
+        <div class="label">
+          <div class="symbol">V<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Variáveis</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c13 r4" data-content="strings">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">13</div>
+        <div class="label">
+          <div class="symbol">S</div>
+          <div class="name">Strings</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c14 r4" data-content="string metodo 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">14</div>
+        <div class="label">
+          <div class="symbol">Sm<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">String Metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c15 r4" data-content="string metodo 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">15</div>
+        <div class="label">
+          <div class="symbol">Sm<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">String metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c16 r4"  data-content="string metodo 3">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">16</div>
+        <div class="label">
+          <div class="symbol">Sm<sup style="font-size: 0.6em;">3</sup></div>
+          <div class="name">String metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c17 r4" data-content="string metodo 4">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">17</div>
+        <div class="label">
+          <div class="symbol">Sm<sup style="font-size: 0.6em;">4</sup></div>
+          <div class="name">String metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c18 r4" data-content="string metodo 5">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">18</div>
+        <div class="label">
+          <div class="symbol">Sm<sup style="font-size: 0.6em;">5</sup></div>
+          <div class="name">String metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c1 r5" data-content="f-strings">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">19</div>
+        <div class="label">
+          <div class="symbol">Fs</div>
+          <div class="name">F-strings</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c2 r5" data-content="converter tipo">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">20</div>
+        <div class="label">
+          <div class="symbol">Ct</div>
+          <div class="name">Conversor de Tipos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c3 r5" data-content="input">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">21</div>
+        <div class="label">
+          <div class="symbol">In</div>
+          <div class="name">Input</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+      
+    </div>
+    <div class="element alkaline-earth-metal c4 r5" data-content="if elif else">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">22</div>
+        <div class="label">
+          <div class="symbol">If</div>
+          <div class="name">If elif else</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c5 r5" data-content="for 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">23</div>
+        <div class="label">
+          <div class="symbol">Fo<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">For</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c6 r5" data-content="for 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">24</div>
+        <div class="label">
+          <div class="symbol">Fo<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">For</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c7 r5" data-content="for 3">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">       
+        <div class="atomic-number">25</div>
+        <div class="label">
+          <div class="symbol">Fo<sup style="font-size: 0.6em;">3</sup></div>
+          <div class="name">For</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c8 r5" data-content="while 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">
+       
+        <div class="atomic-number">26</div>
+        <div class="label">
+          <div class="symbol">Wh<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">While</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c9 r5" data-content="while 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">
+       
+        <div class="atomic-number">27</div>
+        <div class="label">
+          <div class="symbol">Wh<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">While</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>   
+    <div class="element alkaline-earth-metal c10 r5" data-content="lista 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">
+       
+        <div class="atomic-number">28</div>
+        <div class="label">
+          <div class="symbol">L</div>
+          <div class="name">Lista</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c11 r5" data-content="lista 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">
+        <div class="atomic-number">29</div>
+        <div class="label">
+          <div class="symbol">Lm<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Lista metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    
+    <div class="element alkaline-earth-metal c12 r5" data-content="lista 3">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">30</div>
+        <div class="label">
+          <div class="symbol">Lm<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Lista metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element alkaline-earth-metal c13 r5" data-content="lista 4">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">31</div>
+        <div class="label">
+          <div class="symbol">Lm<sup style="font-size: 0.6em;">3</sup></div>
+          <div class="name">Lista metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c14 r5" data-content="tupla 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">32</div>
+        <div class="label">
+          <div class="symbol">T<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Tupla</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c15 r5" data-content="tupla 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">33</div>
+        <div class="label">
+          <div class="symbol">T<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Tupla</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c16 r5" data-content="dict 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>
+      
+      <div class="square">
+       
+        <div class="atomic-number">34</div>
+        <div class="label">
+          <div class="symbol">D<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Dicionario</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c17 r5" data-content="dict 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">      
+        <div class="atomic-number">35</div>
+        <div class="label">
+          <div class="symbol">Dm<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Dict metodos</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c18 r5" data-content="set 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">36</div>
+        <div class="label">
+          <div class="symbol">Se<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Set</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c1 r6" data-content="set 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">37</div>
+        <div class="label">
+          <div class="symbol">Se<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Set</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c2 r6" data-content="estrutura de dados 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">38</div>
+        <div class="label">
+          <div class="symbol">Ed<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Estrutura de dados</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c3 r6" data-content="estrutura de dados 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">39</div>
+        <div class="label">
+          <div class="symbol">Ed<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Estrutura de dados</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c4 r6" data-content="estrutura de dados 3">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">40</div>
+        <div class="label">
+          <div class="symbol">Ed<sup style="font-size: 0.6em;">3</sup></div>
+          <div class="name">Estrutura de dados</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c5 r6" data-content="função">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">41</div>
+        <div class="label">
+          <div class="symbol">F</div>
+          <div class="name">Função</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c6 r6" data-content="lambda">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">42</div>
+        <div class="label">
+          <div class="symbol">Lb</div>
+          <div class="name">Lambda</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c7 r6" data-content="try-except">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">43</div>
+        <div class="label">
+          <div class="symbol">Ty</div>
+          <div class="name">Try Except</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c8 r6" data-content="open 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">44</div>
+        <div class="label">
+          <div class="symbol">Op<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Open</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c9 r6" data-content="open 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">45</div>
+        <div class="label">
+          <div class="symbol">Op<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Open</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c10 r6" data-content="modulo 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>            
+      <div class="square">      
+        <div class="atomic-number">46</div>
+        <div class="label">
+          <div class="symbol">M<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Modulo</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element lanthanoid c11 r6" data-content="modulo 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">47</div>
+        <div class="label">
+          <div class="symbol">M<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Modulo</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c12 r6" data-content="math">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">48</div>
+        <div class="label">
+          <div class="symbol">Mt</div>
+          <div class="name">Math</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element actinoid c13 r6" data-content="random 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">49</div>
+        <div class="label">
+          <div class="symbol">Rd<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Random</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c14 r6" data-content="random 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">50</div>
+        <div class="label">
+          <div class="symbol">Rd<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Random</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c15 r6" data-content="datetime 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">51</div>
+        <div class="label">
+          <div class="symbol">Dt<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Datetime</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c16 r6" data-content="datetime 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">52</div>
+        <div class="label">
+          <div class="symbol">Dt<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Datetime</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c17 r6" data-content="itertools 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">53</div>
+        <div class="label">
+          <div class="symbol">It<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Itertools</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c18 r6" data-content="itertools 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">54</div>
+        <div class="label">
+          <div class="symbol">It<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Itertools</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element metalloid c1 r7" data-content="Poo 1">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">55</div>
+        <div class="label">
+          <div class="symbol">Po<sup style="font-size: 0.6em;">1</sup></div>
+          <div class="name">Poo</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element metalloid c2 r7" data-content="Poo 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">56</div>
+        <div class="label">
+          <div class="symbol">Po<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Poo</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element metalloid c4 r7" data-content="Poo 3">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">57</div>
+        <div class="label">
+          <div class="symbol">Po<sup style="font-size: 0.6em;">3</sup></div>
+          <div class="name">Poo</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element metalloid c5 r7" data-content="Poo 4">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">58</div>
+        <div class="label">
+          <div class="symbol">Po<sup style="font-size: 0.6em;">4</sup></div>
+          <div class="name">Poo</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element transition-metal c6 r7" data-content="iterador">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">59</div>
+        <div class="label">
+          <div class="symbol">It</div>
+          <div class="name">Iterador</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c7 r7" data-content="compressão de lista">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">60</div>
+        <div class="label">
+          <div class="symbol">Lc</div>
+          <div class="name">List compreh..</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c8 r7" data-content="compressão de dict">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">61</div>
+        <div class="label">
+          <div class="symbol">Dc</div>
+          <div class="name">Dict Compreh..</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element actinoid c9 r7" data-content="compressão de conjunto">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">62</div>
+        <div class="label">
+          <div class="symbol">Cc</div>
+          <div class="name">Conjunto Compreh..</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element unknown c10 r7" data-content="regex">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">63</div>
+        <div class="label">
+          <div class="symbol">Re</div>
+          <div class="name">Regex</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element unknown c11 r7" data-content="virtualenv">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">64</div>
+        <div class="label">
+          <div class="symbol">Ve</div>
+          <div class="name">Virtual env</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element other-nonmetal c12 r7" data-content="pip">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">65</div>
+        <div class="label">
+          <div class="symbol">Pp</div>
+          <div class="name">Pip</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element other-nonmetal c13 r7" data-content="logging">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">66</div>
+        <div class="label">
+          <div class="symbol">Lg</div>
+          <div class="name">Logging</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element other-nonmetal c14 r7" data-content="pacotes">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">        
+        <div class="atomic-number">67</div>
+        <div class="label">
+          <div class="symbol">Pa</div>
+          <div class="name">Pacotes/OS</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element other-nonmetal c15 r7" data-content="pastas">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">68</div>
+        <div class="label">
+          <div class="symbol">Pd</div>
+          <div class="name">Pathlib<br>Shutil</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element other-nonmetal c16 r7" data-content="numpy">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">69</div>
+        <div class="label">
+          <div class="symbol">Np</div>
+          <div class="name">Numpy</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element other-nonmetal c17 r7" data-content="pandas">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">        
+        <div class="atomic-number">70</div>
+        <div class="label">
+          <div class="symbol">Ps</div>
+          <div class="name">Pandas</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+    <div class="element other-nonmetal c18 r7" data-content="pandas 2">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">71</div>
+        <div class="label">
+          <div class="symbol">Ps<sup style="font-size: 0.6em;">2</sup></div>
+          <div class="name">Pandas</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element noble-gas c4 r9" data-content="enumerate">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">72</div>
+        <div class="label">
+          <div class="symbol">En</div>
+          <div class="name">Enumerate</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element noble-gas c5 r9" data-content="range">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">73</div>
+        <div class="label">
+          <div class="symbol">Ra</div>
+          <div class="name">Range</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element noble-gas c6 r9" data-content="zip">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">74</div>
+        <div class="label">
+          <div class="symbol">Z</div>
+          <div class="name">Zip</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element actinoid c7 r9" data-content="map">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">75</div>
+        <div class="label">
+          <div class="symbol">Mp</div>
+          <div class="name">Map</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element actinoid c8 r9" data-content="filter">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">76</div>
+        <div class="label">
+          <div class="symbol">Fi</div>
+          <div class="name">Filter</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c9 r9" data-content="sorted">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">77</div>
+        <div class="label">
+          <div class="symbol">So</div>
+          <div class="name">Sorted</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c10 r9" data-content="reversed">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">78</div>
+        <div class="label">
+          <div class="symbol">Re</div>
+          <div class="name">Reversed</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c11 r9" data-content="abs">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">79</div>
+        <div class="label">
+          <div class="symbol">Ab</div>
+          <div class="name">Abs</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c12 r9" data-content="round">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">80</div>
+        <div class="label">
+          <div class="symbol">Ro</div>
+          <div class="name">Round</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c13 r9" data-content="len">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">81</div>
+        <div class="label">
+          <div class="symbol">Le</div>
+          <div class="name">Len</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c14 r9" data-content="sum">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">82</div>
+        <div class="label">
+          <div class="symbol">Su</div>
+          <div class="name">Sum</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c15 r9" data-content="max">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">83</div>
+        <div class="label">
+          <div class="symbol">Ma</div>
+          <div class="name">Max</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c16 r9" data-content="min">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">84</div>
+        <div class="label">
+           <div class="symbol">Mi</div>
+          <div class="name">Min</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c17 r9" data-content="pow">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">85</div>
+        <div class="label">
+          <div class="symbol">Po</div>
+          <div class="name">Pow</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element transition-metal c18 r9" data-content="divmod">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">        
+        <div class="atomic-number">86</div>
+        <div class="label">
+          <div class="symbol">Di</div>
+          <div class="name">Divmod</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c4 r10" data-content="slice">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">87</div>
+        <div class="label">
+          <div class="symbol">Sl</div>
+          <div class="name">Slice</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c5 r10" data-content="all">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">
+        <div class="atomic-number">88</div>
+        <div class="label">
+          <div class="symbol">Al</div>
+          <div class="name">All</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c6 r10" data-content="any">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">        
+        <div class="atomic-number">89</div>
+        <div class="label">
+          <div class="symbol">An</div>
+          <div class="name">Any</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c7 r10" data-content="type">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">90</div>
+        <div class="label">
+          <div class="symbol">Ty</div>
+          <div class="name">Type</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c8 r10" data-content="isinstance">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">91</div>
+        <div class="label">
+          <div class="symbol">Is</div>
+          <div class="name">Isinstance</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c9 r10" data-content="ascii">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">92</div>
+        <div class="label">
+          <div class="symbol">As</div>
+          <div class="name">Ascii</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c10 r10" data-content="ord">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">93</div>
+        <div class="label">
+          <div class="symbol">Or</div>
+          <div class="name">Ord</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c11 r10" data-content="chr">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">94</div>
+        <div class="label">
+          <div class="symbol">Ch</div>
+          <div class="name">Chr</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c12 r10" data-content="eval">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">95</div>
+        <div class="label">
+          <div class="symbol">Ev</div>
+          <div class="name">Eval</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element post-transition-metal c13 r10" data-content="exec">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">96</div>
+        <div class="label">
+          <div class="symbol">Ex</div>
+          <div class="name">Exec</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element metalloid c14 r10" data-content="staticmethod">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">        
+        <div class="atomic-number">97</div>
+        <div class="label">
+          <div class="symbol">St</div>
+          <div class="name">Static Method</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element metalloid c15 r10" data-content="classmethod">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">98</div>
+        <div class="label">
+          <div class="symbol">Cl</div>
+          <div class="name">Class Method</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element metalloid c16 r10" data-content="issubclass">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">99</div>
+        <div class="label">
+          <div class="symbol">Ic</div>
+          <div class="name">Is subclass</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element metalloid c17 r10" data-content="property">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">        
+        <div class="atomic-number">100</div>
+        <div class="label">
+          <div class="symbol">Pr</div>
+          <div class="name">Property</div>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>    
+    <div class="element metalloid c18 r10" data-content="super">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>      
+      <div class="square">       
+        <div class="atomic-number">101</div>
+        <div class="label">
+          <div class="symbol">Su</div>
+          <div class="name">Super</div>
+          
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>       
+    <div class="element actinoid transition-metal post-transition-metal metalloid noble-gas  c3 r7">
+      <input class="activate" type="radio" name="elements"/>
+      <input class="deactivate" type="radio" name="elements"/>  
+      <div class="square" style="font-size: 1.5em; text-align: center;">Built-in<br>Metodos</div>      
+    </div>
+    
+    <div class="gap c3 r8"></div>
+    <div class="key">
+      <div class="row">
+        <label class="alkali-metal" for="alkali-metals">Print,Comentário,Dados<br>Operadores,Variaveis</label>
+        <label class="alkaline-earth-metal" for="alkaline-earth-metals">Strings,conversor<br>fluxo if, For, While, Lista</label>
+        <label class="lanthanoid" for="lanthanoids">Set,Dados<br>Função,Lambda,Try<br>Open,Modulo</label>
+        <label class="actinoid" for="actinoids">Math,Random<br>Datetime,Itertools<br>comprehension<br>Map,Filter</label>
+        <label class="transition-metal" for="transition-metals">Iterador,Sorted,Reversed,Abs<br>Round,Len,Sum<br>Max,Min,Pow<br>Divmod</label>
+        <label class="post-transition-metal" for="post-transition-metals">Slice,All,Any<br>Type,Isinstance<br>Ascii,Ord<br>Chr,Eval,Exec</label>
+        <label class="metalloid" for="metalloids">POO (Programação Orientada a Objetos)</label>
+        <label class="other-nonmetal" for="other-nonmetals">Pip,Pacotes<br>Logging,Diretórios<br>Numpy,Pandas</label>
+        <label class="noble-gas" for="noble-gasses">Enumerate<br>Range<br>Zip</label>
+        <label class="unknown" for="unknown">Regex e Virtual Env</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- partial --> 
+<script>
+  document.querySelectorAll('.element').forEach((element) => {
+  const activateInput = element.querySelector('.activate');
+  const deactivateInput = element.querySelector('.deactivate');
+  const contentDiv = element.querySelector('.content');
+
+  // Função para carregar o iframe de acordo com o data-content de cada elemento
+  const loadIframe = (element) => {
+    const contentId = element.getAttribute('data-content'); // Obtém o valor de data-content
+    if (!contentDiv.querySelector('iframe')) { // Verifica se o iframe já foi adicionado
+      const iframe = document.createElement('iframe');
+      iframe.src = `css/methods/${contentId}.html`; // Caminho do arquivo HTML
+      iframe.style.width = '100%'; // Garante que o iframe ocupe todo o espaço
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
+      contentDiv.appendChild(iframe); // Adiciona o iframe ao conteúdo
+    }
+  };
+
+  // Função para remover o iframe
+  const removeIframe = () => {
+    const iframe = contentDiv.querySelector('iframe');
+    if (iframe) {
+      iframe.remove(); // Remove o iframe quando o quadrado for fechado
+    }
+  };
+
+  // Quando o quadrado for ativado (clicado), insira o iframe com atraso
+  activateInput.addEventListener('change', function () {
+    if (this.checked) {
+      // Aguarda o final da transição de expansão antes de carregar o iframe
+      setTimeout(() => {
+        loadIframe(element); // Passa o elemento para a função loadIframe
+      }, 100); // Delay de 500ms para a animação de expansão
+    }
+  });
+
+  // Quando o quadrado for desativado, remova o iframe
+  deactivateInput.addEventListener('change', function () {
+    if (this.checked) {
+      removeIframe(); // Remove o iframe quando o quadrado for desativado
+    }
+  });
+});
+
+
+
+</script>
+
+
+
+
+</body>
+</html>

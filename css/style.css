@@ -1,0 +1,589 @@
+body {
+  background: #101318;
+  text-shadow: 0 0 0.4vw currentColor;
+  overflow: hidden;
+}
+
+/* Estilo específico para Online e Offline */
+.element[data-content="offline"] .square,
+.element[data-content="online"] .square {
+  background-color: #2b2b2b;
+  border-color: #666;
+  color: #fff;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.element[data-content="offline"] .square:hover,
+.element[data-content="online"] .square:hover {
+  background-color: #444;
+  transform: scale(1.05);
+  border-color: #888;
+}
+
+.element[data-content="offline"] .label .name,
+.element[data-content="online"] .label .name {
+  font-size: 0.5vw;
+}
+
+
+
+
+
+
+.wrapper {
+  position: relative;
+  overflow: hidden;
+  padding: 1%;
+  width: 85%;
+  margin-left: 5%;
+  margin-top: 0%;
+}
+.wrapper > input {
+  -webkit-appearance: none;
+  appearance: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.periodic-table {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(18, 1fr);
+  grid-template-rows: auto repeat(9, 1fr);
+}
+
+.element {
+  position: relative;
+  font-size: 0.5vw;
+  padding-bottom: 100%;
+  cursor: pointer;
+  color: #fff;
+  transition: 500ms;
+}
+.imagem img {
+  width: 100%;
+  height: 100%;
+  background: #101318; 
+  
+}
+
+
+
+.element .overlay {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #101318;
+  opacity: 0;
+  pointer-events: none;
+  transition: 500ms;
+}
+/* Inicialmente, o conteúdo estará escondido */
+.square .content {
+  display: none; /* Inicialmente escondido */
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  text-align: center;
+  width: 100%;
+  flex-grow: 1;
+  z-index: 9999;  /* Garante que o conteúdo tenha um z-index maior */
+  position: relative; /* Isso ajuda a garantir que o conteúdo seja visível sobre outros elementos */
+
+}
+  
+ /* Estilos do modal, agora dentro do content */
+.element .content {
+  display: none; /* Inicialmente escondido */
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  text-align: center;
+  width: 100%;
+  flex-grow: 1;
+}
+
+/* Quando o quadrado se expande */
+.element input.activate:checked ~ .square .content {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.modal {
+  display: none; /* Inicialmente oculto */
+  position: fixed;
+  z-index: 1; /* Sobrepõe o conteúdo */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+}
+
+.modal iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.element input.activate:checked ~ .square .content .modal {
+  display: block; /* Exibe o iframe quando o quadrado é ativado */
+}
+
+
+.element .square {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid;
+  box-sizing: border-box;
+  background: #101318;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition-property: transform, z-index, left, right, top, bottom;
+  transition-duration: 100ms, 0ms, 200ms, 200ms, 200ms, 200ms;
+  transition-delay: 0ms, 100ms, 0ms, 0ms, 0ms, 0ms;
+}
+.element .atomic-number {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 2px;
+}
+.element .label {
+  text-align: center;
+  transition: 200ms;
+}
+.element .symbol {
+  font-size: 1.7vw;
+}
+.element .name {
+  font-size: 0.7vw;
+}
+.element .atomic-weight {
+  position: absolute;
+  right: 0;
+  top: 0;
+  list-style: none;
+  margin: 0;
+  padding: 2px;
+  opacity: 0;
+  transition: 200ms;
+  text-align: right;
+}
+.element .model {
+  display: none;
+  position: absolute;
+  left: -500%;
+  right: -500%;
+  top: -500%;
+  bottom: -500%;
+  transform: scale(0.1);
+}
+.element input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  outline: none;
+}
+.element input[type="radio"].activate:hover ~ .square {
+  z-index: 2;
+  transform: scale(1.35);
+  transition-delay: 0ms;
+  outline: none;
+  pointer-events: none;
+}
+.element input[type="radio"].activate:checked + input[type="radio"].deactivate {
+  z-index: 3;
+  pointer-events: all;
+}
+.element input[type="radio"].activate:checked ~ .overlay {
+  opacity: 0;
+}
+.element input[type="radio"].activate:checked ~ .square {
+  z-index: 3;
+  transform: scale(0.85); /* Cresce proporcionalmente */
+  width: 85vw; /* 85% da largura da tela */
+  height: 85vh; /* 85% da altura da tela */
+  top: 50%; /* Centraliza verticalmente */
+  left: 50%; /* Centraliza horizontalmente */
+  transform: translate(-50%, -50%) scale(1); /* Expande a partir do centro */
+  position: fixed; /* Garante que ocupe uma posição fixa na tela */
+  transition: all 50ms ease; /* Suaviza a transição */
+  outline: none;
+  cursor: auto;
+}
+.element input[type="radio"].activate:checked ~ .square .label {
+  transition-duration: 500ms;
+  transform: scale(0.75);
+}
+.element input[type="radio"].activate:checked ~ .square .atomic-weight {
+  opacity: 1;
+  transition: 500ms;
+}
+.element input[type="radio"].activate:checked ~ .square .model {
+  display: block;
+  animation: fade-in;
+  animation-duration: 1s;
+}
+
+.element input[type="radio"].deactivate {
+  position: fixed;
+  display: block;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+.element input[type="radio"].deactivate:checked ~ .square {
+  z-index: 1;
+}
+
+.placeholder {
+  position: relative;
+  z-index: -1;
+  font-size: 1vw;
+  padding-bottom: 100%;
+  color: #fff;
+  transition: 500ms;
+}
+.placeholder .square {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.5;
+}
+
+.gap {
+  position: relative;
+  padding-bottom: 100%;
+  transition: 500ms;
+}
+.gap::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 50%;
+  height: calc(200% + 5px * 2 - 4px);
+  border-width: 0 0 2px 2px;
+  border-style: solid;
+  margin-left: -1px;
+  color: #fff;
+  opacity: 0.2;
+}
+
+.alkali-metal {
+  color: #ecbe59;
+}
+
+.alkaline-earth-metal {
+  color: #dee955;
+}
+
+.lanthanoid {
+  color: #ec77a3;
+}
+
+.actinoid {
+  color: #c686cc;
+}
+
+.transition-metal {
+  color: #fd8572;
+}
+
+.post-transition-metal {
+  color: #4cddf3;
+}
+
+
+.metalloid {
+  color: #3aefb6;
+}
+
+.other-nonmetal {
+  color: #52ee61;
+}
+
+.noble-gas {
+  color: #759fff;
+}
+
+.unknown {
+  color: #cccccc;
+}
+
+.r1 {
+  grid-row: 1;
+}
+
+.r2 {
+  grid-row: 2;
+}
+
+.r3 {
+  grid-row: 3;
+}
+
+.r4 {
+  grid-row: 4;
+}
+
+.r5 {
+  grid-row: 5;
+}
+
+.r6 {
+  grid-row: 6;
+}
+
+.r7 {
+  grid-row: 7;
+}
+
+.r8 {
+  grid-row: 8;
+}
+
+.r9 {
+  grid-row: 9;
+}
+
+.r10 {
+  grid-row: 10;
+}
+
+.c1 {
+  grid-column: 1;
+}
+
+.c2 {
+  grid-column: 2;
+}
+
+.c3 {
+  grid-column: 3;
+}
+
+.c4 {
+  grid-column: 4;
+}
+
+.c5 {
+  grid-column: 5;
+}
+
+.c6 {
+  grid-column: 6;
+}
+
+.c7 {
+  grid-column: 7;
+}
+
+.c8 {
+  grid-column: 8;
+}
+
+.c9 {
+  grid-column: 9;
+}
+
+.c10 {
+  grid-column: 10;
+}
+
+.c11 {
+  grid-column: 11;
+}
+
+.c12 {
+  grid-column: 12;
+}
+
+.c13 {
+  grid-column: 13;
+}
+
+.c14 {
+  grid-column: 14;
+}
+
+.c15 {
+  grid-column: 15;
+}
+
+.c16 {
+  grid-column: 16;
+}
+
+.c17 {
+  grid-column: 17;
+}
+
+.c18 {
+  grid-column: 18;
+}
+
+
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes noise {
+  0%, 100% {
+    background-position: 0 0;
+  }
+  10% {
+    background-position: -5% -10%;
+  }
+  20% {
+    background-position: -15% 5%;
+  }
+  30% {
+    background-position: 7% -25%;
+  }
+  40% {
+    background-position: 20% 25%;
+  }
+  50% {
+    background-position: -25% 10%;
+  }
+  60% {
+    background-position: 15% 5%;
+  }
+  70% {
+    background-position: 0% 15%;
+  }
+  80% {
+    background-position: 25% 35%;
+  }
+  90% {
+    background-position: -10% 10%;
+  }
+}
+.key {
+  position: relative;
+  z-index: 1;
+  grid-row: 1;
+  grid-column-start: 1;
+  grid-column-end: 17;
+  font-size: 0.8vw;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  user-select: none;
+  justify-content: center; /* Centraliza os itens horizontalmente */
+  text-align: center; /* Centraliza o texto dentro das labels */
+}
+.key .row {
+  position: relative;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 15px;
+  
+}
+.key .row label {
+  opacity: 0.85;
+  cursor: pointer;
+  transition: 120ms;
+  pointer-events: all;
+  
+}
+.key .row label:hover {
+  opacity: 1 !important;
+  transform: scale(1.35);
+}
+
+#alkali-metals:checked ~ .periodic-table .element:not(.alkali-metal),
+#alkaline-earth-metals:checked ~ .periodic-table .element:not(.alkaline-earth-metal),
+#lanthanoids:checked ~ .periodic-table .element:not(.lanthanoid),
+#actinoids:checked ~ .periodic-table .element:not(.actinoid),
+#transition-metals:checked ~ .periodic-table .element:not(.transition-metal),
+#post-transition-metals:checked ~ .periodic-table .element:not(.post-transition-metal),
+#metalloids:checked ~ .periodic-table .element:not(.metalloid),
+#other-nonmetals:checked ~ .periodic-table .element:not(.other-nonmetal),
+#noble-gasses:checked ~ .periodic-table .element:not(.noble-gas),
+#unknown:checked ~ .periodic-table .element:not(.unknown),
+#alkali-metals:checked ~ .periodic-table .placeholder,
+#alkaline-earth-metals:checked ~ .periodic-table .placeholder,
+#lanthanoids:checked ~ .periodic-table .placeholder:not(.lanthanoid),
+#actinoids:checked ~ .periodic-table .placeholder:not(.actinoid),
+#transition-metals:checked ~ .periodic-table .placeholder,
+#post-transition-metals:checked ~ .periodic-table .placeholder,
+#metalloids:checked ~ .periodic-table .placeholder,
+#other-nonmetals:checked ~ .periodic-table .placeholder,
+#noble-gasses:checked ~ .periodic-table .placeholder,
+#unknown:checked ~ .periodic-table .placeholder {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+#alkali-metals:checked ~ .periodic-table .key label:not(.alkali-metal),
+#alkaline-earth-metals:checked ~ .periodic-table .key label:not(.alkaline-earth-metal),
+#lanthanoids:checked ~ .periodic-table .key label:not(.lanthanoid),
+#actinoids:checked ~ .periodic-table .key label:not(.actinoid),
+#transition-metals:checked ~ .periodic-table .key label:not(.transition-metal),
+#post-transition-metals:checked ~ .periodic-table .key label:not(.post-transition-metal),
+#metalloids:checked ~ .periodic-table .key label:not(.metalloid),
+#other-nonmetals:checked ~ .periodic-table .key label:not(.other-nonmetal),
+#noble-gasses:checked ~ .periodic-table .key label:not(.noble-gas),
+#unknown:checked ~ .periodic-table .key label:not(.unknown) {
+  opacity: 0.65;
+}
+
+.category-toggle:not(#lanthanoids):not(#actinoids):checked ~ .periodic-table .gap {
+  opacity: 0.5;
+}
+
+.category-toggle:checked ~ .category-cancel {
+  visibility: visible;
+  pointer-events: all;
+  cursor: pointer;
+}

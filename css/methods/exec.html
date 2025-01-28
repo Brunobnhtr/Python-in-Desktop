@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+  <!-- CSS -->
+  <link rel="stylesheet" href="codemirror\codemirror_min.css">
+  <link rel="stylesheet" href="codemirror\themedracula.css"> 
+    <!-- JS -->
+  <script src="codemirror\codemirror_min.js"></script> 
+
+  <script src="codemirror\python.min.js"></script>  
+
+  <script src="codemirror\closebrackets.js"></script>
+  <script src="codemirror\active_line.js"></script>
+  <script src="codemirror\placeholder.js"></script>
+ 
+  <link rel="stylesheet" href="styles_method.css"> 
+  
+  <style>
+    /* Definindo variáveis para as cores */
+  :root {
+      --primary-color: #4cddf3; /* Cor principal */
+      --text-color: #000000; /* Cor do texto preta */
+      --text-shadow-color: #000000; /* Cor da sombra do texto (preta por padrão) */
+  }
+  
+  /* Estilo do botão */
+  .method-button {
+      color: var(--primary-color); /* Cor do texto com o neon */
+      background-color: #101318; /* Fundo preto */
+      border: var(--primary-color) 3px solid;
+      box-shadow: inset 0 0 8px 0 var(--primary-color), 0 0 8px 0 var(--primary-color);
+      text-align: center;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease; /* Transição suave para o efeito de hover */
+      text-shadow: 2px 2px 4px var(--text-shadow-color); /* Sombra no texto */
+  }
+  
+  /* Efeito de hover (ao passar o mouse sobre o botão) */
+  .method-button:hover {
+      color: var(--text-color); /* Muda a cor da letra para preto no hover */
+      box-shadow: 0 0 16px 4px var(--primary-color), inset 0 0 4px var(--primary-color); /* Aumenta o brilho no hover */
+      text-shadow: 2px 2px 4px var(--text-shadow-color); /* Muda a sombra para a cor primária ao passar o mouse */
+  }
+  
+  /* Quando o botão é clicado */
+  .method-button.clicked {
+      color: var(--text-color); /* Muda a cor da letra para preto quando clicado */
+      box-shadow: inset 0 0 8px 0 var(--primary-color), 0 0 8px 0 var(--primary-color); /* Mantém o brilho interno */
+      text-shadow: 2px 2px 4px var(--primary-color); /* Mantém a sombra neon */
+  }
+  
+  /* Estilo para o antes e depois do botão (efeito neon) */
+  .method-button::before {
+      background: var(--primary-color);
+  }
+  
+  .method-button::after {
+      box-shadow: 0 0 64px 16px var(--primary-color);
+      background-color: var(--primary-color);
+  }
+  
+  /* Efeito quando o botão está selecionado (foco) */
+  .method-button:focus {
+      outline: none; /* Remove o contorno padrão */
+      color: var(--text-color); /* Garante que a cor do texto seja preta no foco */
+      box-shadow: 0 0 16px 4px var(--primary-color), inset 0 0 4px var(--primary-color); /* Efeito de glow no foco */
+      text-shadow: 2px 2px 4px var(--primary-color); /* Sombra neon no foco */
+  }
+  
+  
+    table th, table td {
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+    }
+  
+    #output {
+        color: var(--primary-color);
+    }
+  
+    #executar:hover {
+        background-color: var(--primary-color);
+        
+    }
+  
+    #summary-container {
+        border: 1px solid #101318 !important; /* A propriedade !important força a aplicação do estilo */
+    }
+  </style>
+  
+</head>
+<body>
+<!-- Container dos botões -->
+    <div class="button-container">
+        <button class="method-button" onclick="showSummary()">Resumo dos Métodos</button>  
+    </div>      
+    <div class="button-container">    
+        <button class="method-button" onclick="showDescription('exec')">Descrição e Exemplo do exec()</button>
+    </div>
+        
+   
+
+    <div id="summary-container" style="display: none; margin-top: 20px; border: 1px solid #101318; padding: 15px; border-radius: 5px; background-color: #101318;">       
+        
+        <table>
+            <thead>
+              <tr>
+                <th>Função</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>exec()</td>
+                <td>Executa dinamicamente um código Python passado como string.</td>
+              </tr>
+            </tbody>
+          </table>
+    
+    </div>
+      
+
+    <!-- Descrições abaixo dos botões -->
+    
+    <div class="description-container">
+        <div id="description-text">          
+        </div>   
+    </div>
+    
+ 
+    
+
+    <p class="hidden">Escreva seu código Python abaixo e clique em "Executar".</p>
+    <button id ="executar" onclick="runPython()">Executar</button>
+    <div style="display: flex; justify-content: space-between; width: 98vw; padding: 20px 0;">
+        <div id="editor"></div>
+        <div id="output">Resultado será exibido aqui...</div>
+    </div>
+    
+  
+  
+  <script>   
+    // Definindo a variável EDITOR globalmente
+    let EDITOR;
+
+    // Função para alternar visibilidade entre resumo e conteúdo
+    function showSummary() {
+        // Remover a classe 'clicked' de todos os botões
+        document.querySelectorAll('.method-button').forEach((btn) => {
+            btn.classList.remove('clicked');
+        });
+
+        // Adicionar a classe 'clicked' ao botão de resumo
+        document.querySelector("button[onclick='showSummary()']").classList.add('clicked');
+
+        // Exibir o resumo e ocultar os outros elementos
+        document.getElementById("summary-container").style.display = "block";
+        document.getElementById("description-text").style.display = "none";        
+        document.getElementById("editor").style.display = "none";
+        document.getElementById("output").style.display = "none";
+        document.getElementById("executar").style.display = "none"
+        document.querySelector("p.hidden").style.display = "none";
+        
+    } 
+
+    // Função para exibir descrição e editor de código
+    function showDescription(param) {
+        const summaryContainer = document.getElementById("summary-container");
+        const descriptionText = document.getElementById("description-text");
+        const editor2 = document.getElementById("editor");
+        const editoroutput = document.getElementById("output");
+        const executar = document.getElementById("executar");
+        const editorParagraph = document.querySelector("p.hidden");
+        
+
+        summaryContainer.style.display = "none"; // Oculta o resumo        
+        descriptionText.style.display = "block"; // Exibe a descrição
+        editorParagraph.style.display = "block";
+        editor2.style.display = "block";        
+        // Exibe o output
+        editoroutput.style.display = "block"; // Garante que o output seja visível        
+        executar.style.display = "block";  
+        editoroutput.textContent = "Resultado será exibido aqui...";
+        
+        // Configuração do editor CodeMirror
+        if (!EDITOR) {  // Verificar se o editor já foi inicializado
+            EDITOR = CodeMirror(document.getElementById("editor"), {
+                mode: "python",
+                theme: "dracula",
+                lineNumbers: true,
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                styleActiveLine: true,
+                placeholder: "Escreva seu código Python aqui...",
+            });
+            // Ajusta o editor para ocupar o tamanho completo do contêiner
+            EDITOR.setSize("100%", "100%");
+        }
+        
+
+        // Definir as descrições e exemplos com base no botão clicado
+        let description = '';
+        let code = '';  
+        switch (param) {
+            case 'exec':
+                description = `
+                    <h2>Função exec()</h2>
+                    <p>A função <code>exec()</code> em Python executa um código Python armazenado em uma string. É útil quando você precisa executar código dinâmico que não pode ser determinado até o momento da execução. A função <code>exec()</code> pode ser usada para avaliar uma expressão ou bloco de código fornecido como string.</p>
+                    <p><strong>Sintaxe:</strong></p>
+                    <p><code>exec(object, globals=None, locals=None)</code></p>
+                    <p>Onde:
+                        <ul>
+                            <li><code>object</code> é a string contendo o código Python que será executado.</li>
+                            <li><code>globals</code> e <code>locals</code> são dicionários que definem o escopo onde o código será executado.</li>
+                        </ul>
+                    </p>
+                    <p><strong>Atenção:</strong> O uso de <code>exec()</code> pode ser perigoso, pois ele permite a execução de código arbitrário.</p>
+                `;
+                code = `
+# Definindo uma string de código que será executada
+code = """
+a = 5
+b = 10
+result = a + b
+print(result)
+"""
+
+# Executando o código com exec()
+exec(code)
+                `;
+                break;
+            
+            
+            
+                default:
+                    description = "<h2>Selecione um método para ver o exemplo.</h2>";
+                    code = "";
+                    break;
+                    
+    }
+        
+
+       // Atualizar a descrição na tela
+       descriptionText.innerHTML = `${description}</p>`;
+
+       // Inserir o código diretamente no editor CodeMirror
+       EDITOR.setValue(code);
+
+        // Remover a classe 'clicked' de todos os botões
+        document.querySelectorAll('.method-button').forEach((btn) => {
+            btn.classList.remove('clicked');
+        });
+
+        // Adicionar a classe 'clicked' ao botão da função clicada
+        document.querySelector(`button[onclick="showDescription('${param}')"]`).classList.add('clicked');
+    }
+
+    
+     // Configuração inicial para mostrar o resumo ao carregar a página
+    window.onload = function () {
+      showSummary();
+    };
+
+   // No código do iframe
+    let pyodide;
+
+    if (window.parent.pyodide) {
+    pyodide = window.parent.pyodide; // Acessa o Pyodide carregado no index.html
+
+    }
+
+    // Função para executar o código Python
+      
+async function runPython() {
+    const code = EDITOR.getValue();
+    const outputDiv = document.getElementById("output");
+    outputDiv.textContent = "Executando...";
+
+    try {
+        // Função para capturar as entradas de cada `input()` no código
+        const inputs = [];
+        const regex = /input\((.*?)\)/g;
+        let match;
+
+        // Encontrar todas as ocorrências de input() no código
+        while ((match = regex.exec(code)) !== null) {
+            const promptText = match[1].trim().replace(/['"]/g, ""); // Remover as aspas ao redor da string
+            inputs.push(promptText);
+        }
+
+        // Criar os campos de entrada correspondentes aos `input()`
+        const userInputs = [];
+        let inputIndex = 0; // Índice de controle dos inputs
+
+        // Função para capturar múltiplas entradas dentro de laços
+        const getInput = async (promptText) => {
+            return new Promise(resolve => {
+                // Criar o overlay para bloquear o conteúdo de fora do prompt
+                const overlay = document.createElement("div");
+                overlay.style.position = "fixed";
+                overlay.style.top = "0";
+                overlay.style.left = "0";
+                overlay.style.width = "100%";
+                overlay.style.height = "100%";
+                overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)"; // Cor escura e transparente
+                overlay.style.zIndex = "9998"; // Fica atrás do prompt container
+                document.body.appendChild(overlay);
+
+                // Criar o container do prompt customizado
+                const promptContainer = document.createElement("div");
+                promptContainer.style.position = "fixed";
+                promptContainer.style.top = "50%";
+                promptContainer.style.left = "50%";
+                promptContainer.style.transform = "translate(-50%, -50%)";
+                promptContainer.style.padding = "20px";
+                promptContainer.style.backgroundColor = "black";
+                promptContainer.style.boxShadow = "0 0 15px rgba(0, 0, 0, 0.2)";
+                promptContainer.style.borderRadius = "10px";
+                promptContainer.style.zIndex = "9999";
+                promptContainer.style.textAlign = "center";
+                promptContainer.style.minWidth = "250px";
+
+                // Texto do prompt
+                const promptTextElement = document.createElement("p");
+                promptTextElement.textContent = promptText;
+                promptTextElement.style.fontSize = "16px";
+                promptContainer.appendChild(promptTextElement);
+
+                // Campo de entrada
+                const inputField = document.createElement("input");
+                inputField.setAttribute("type", "text");
+                inputField.setAttribute("placeholder", "Digite aqui...");
+                inputField.style.marginTop = "10px";
+                inputField.style.padding = "10px";
+                inputField.style.fontSize = "16px";
+                inputField.style.borderRadius = "5px";
+                inputField.style.border = "2px solid #007BFF";
+                inputField.style.width = "80%";
+                inputField.style.boxSizing = "border-box";
+                promptContainer.appendChild(inputField);
+
+                // Botões "OK" e "Cancelar"
+                const buttonContainer = document.createElement("div");
+                buttonContainer.style.marginTop = "20px";
+
+                const okButton = document.createElement("button");
+                okButton.textContent = "OK";
+                okButton.style.padding = "10px 20px";
+                okButton.style.marginRight = "10px";
+                okButton.style.fontSize = "16px";
+                okButton.style.backgroundColor = "#007BFF";
+                okButton.style.color = "white";
+                okButton.style.border = "none";
+                okButton.style.borderRadius = "5px";
+                okButton.style.cursor = "pointer";
+                buttonContainer.appendChild(okButton);
+
+                const cancelButton = document.createElement("button");
+                cancelButton.textContent = "Cancelar";
+                cancelButton.style.padding = "10px 20px";
+                cancelButton.style.fontSize = "16px";
+                cancelButton.style.backgroundColor = "#FF4136";
+                cancelButton.style.color = "white";
+                cancelButton.style.border = "none";
+                cancelButton.style.borderRadius = "5px";
+                cancelButton.style.cursor = "pointer";
+                buttonContainer.appendChild(cancelButton);
+
+                promptContainer.appendChild(buttonContainer);
+                document.body.appendChild(promptContainer);
+
+                // Focar automaticamente no campo de entrada assim que o prompt aparecer
+                inputField.focus();
+
+                // Função de resolução quando os botões são clicados
+                okButton.addEventListener("click", () => {
+                    resolve(inputField.value.trim() === "" ? "" : inputField.value); // Se vazio, envia ""
+                    document.body.removeChild(promptContainer);
+                    document.body.removeChild(overlay);
+                });
+
+                cancelButton.addEventListener("click", () => {
+                    resolve(""); // Se cancelar, envia vazio ""
+                    document.body.removeChild(promptContainer);
+                    document.body.removeChild(overlay);
+                });
+
+                inputField.addEventListener("keydown", function(event) {
+                    if (event.key === 'Enter') {
+                        okButton.click(); // Simula o clique no "OK" ao pressionar "Enter"
+                    }
+                });
+            });
+        };
+
+        // Processar os inputs em sequência, em laços ou chamadas subsequentes
+        for (let i = 0; i < inputs.length; i++) {
+            const userInput = await getInput(inputs[i]);
+            userInputs.push(userInput);
+        }
+
+        // Substituir os inputs no código Python com os valores fornecidos pelo usuário
+        let modifiedCode = code;
+        for (let i = 0; i < inputs.length; i++) {
+            modifiedCode = modifiedCode.replace(`input("${inputs[i]}")`, `"${userInputs[i]}"`);
+        }
+
+        // Encapsulando o código do usuário com a captura das entradas
+        
+
+        
+ const wrappedCode = `
+import sys
+import logging
+from io import StringIO
+
+# Limpa configurações de logging anteriores
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+
+# Cria um novo capturador para redirecionar os logs para o StringIO
+log_stream = StringIO()
+logging.basicConfig(level=logging.DEBUG, stream=log_stream, format='%(levelname)s: %(message)s')
+
+# Substituindo os inputs no código do usuário com os valores fornecidos
+def input(prompt=""):
+    return "${userInputs.join('", "')}"  # Substitui entradas conforme fornecido
+
+# Função de log personalizada para capturar logs
+def log(message):
+    logging.debug(message)
+
+# Redefine a saída para capturar logs e stdout
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+# Código do usuário
+code = ${JSON.stringify(modifiedCode)}
+
+try:
+    # Executa o código fornecido pelo usuário
+    exec(code)
+
+    # Verifica se os logs foram gerados e inclui na saída
+    result = mystdout.getvalue()
+    logs = log_stream.getvalue()
+    if logs:  # Só adiciona os logs se houver algum
+        result += "\\n\\nLogs:\\n" + logs  # Corrigido para escapar as quebras de linha
+
+except Exception as e:
+    # Captura o erro ocorrido durante a execução
+    result = f"Erro: {e}"
+
+# Restaura a saída padrão
+sys.stdout = old_stdout
+result
+`;
+
+
+
+        // Executando o código com a entrada fornecida
+        const result = await pyodide.runPythonAsync(wrappedCode);
+        outputDiv.textContent = result.trim();
+        
+    } catch (error) {
+        outputDiv.textContent = `Erro: ${error.message}`;
+    }
+}
+
+
+  </script>
+
+
+</body>
+</html>

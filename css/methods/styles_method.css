@@ -1,0 +1,239 @@
+
+    /* Estilos gerais do body */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #101318;
+        color: #f8f8f2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        margin: 0;
+    }
+/* Container dos Botões */
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px; /* Espaçamento entre os botões */
+    margin-bottom: 5px; /* Espaçamento abaixo do contêiner */
+    padding-top: 5px;
+    max-width: 98vw;
+}
+/* Estilo Neon para Botões */
+.method-button {
+    font-size: 16px; /* Tamanho compacto do texto */
+    font-weight: 700;
+    text-decoration: none;
+
+    display: inline-block;
+    
+    background-color: #101318; /* Fundo padrão quando não clicado */
+    padding: 10px 20px;
+    margin: 8px;
+    
+    
+    text-shadow: 0 0 4px hsl(0 0% 100% / 0.3), 0 0 16px;
+    position: relative;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Neon abaixo do botão (invisível por padrão) */
+.method-button::before {
+    content: "";
+    position: absolute;
+    top: 120%;
+    left: 0;
+
+    
+    width: 100%;
+    height: 100%;
+
+    transform: perspective(64px) rotateX(40deg) scale(1, 0.35);
+    filter: blur(16px);
+    opacity: 0; /* Invisível por padrão */
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Neon ao passar o mouse ou clicar */
+.method-button:hover::before,
+.method-button.clicked::before {
+    opacity: 0.7; /* Ativa o brilho ao passar o mouse ou clicar */
+}
+
+/* Efeito Neon ao redor (também invisível por padrão) */
+.method-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    
+    opacity: 0; /* Invisível por padrão */
+   
+    z-index: -1;
+    transition: opacity 100ms linear;
+}
+
+/* Ativa o efeito neon ao passar o mouse ou clicar */
+.method-button:hover::after,
+.method-button.clicked::after {
+    opacity: 1; /* Brilho ativado */
+}
+
+/* Alterações ao passar o mouse */
+.method-button:hover {
+    color: #31202b;
+    text-shadow: none;
+    transform: scale(1.05);
+}
+
+/* Botão Clicado */
+.method-button.clicked {
+    background-color: #31202b; /* Fundo destacado */    
+    text-shadow: none;
+    transform: scale(1); /* Mantém o botão no mesmo tamanho */
+    
+}
+
+/* Estilo para o contêiner de descrição */
+.description-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #101318; /* Fundo consistente */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo para o texto */
+.description-container #description-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Fonte estilo Apple */
+    font-size: 0.95em; /* Diminuindo o tamanho da fonte */
+    line-height: 1.6; /* Ajuste de espaçamento entre linhas */
+    color: #EDEDED; /* Branco suave */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); /* Sombra para destaque leve */
+    margin: 0 auto;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+/* Efeito ao passar o mouse */
+.description-container #description-text:hover {
+    color: #FFFFFF; /* Leve realce ao passar o mouse */
+    text-shadow: 0 1px 4px rgba(255, 255, 255, 0.3); /* Brilho muito sutil */
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+
+
+/* Estilos da Tabela */
+#summary-container {        
+    display: block;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #101318;
+}
+
+table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #101318;
+}
+
+table th, table td {
+    border: 1px solid #1a2431;
+    padding: 8px;
+    text-align: left;
+    
+}
+
+table th {
+    background-color: #1a2431;
+}
+
+table tr:nth-child(even) {
+    background-color: #141c24;
+}
+
+/* Flexbox para Editor e Output */
+#editor,
+#output {
+    height: 50vh; /* Altura igual para ambos */
+    padding: 1px;
+    border-radius: 12px; /* Bordas arredondadas */
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 48%; /* Largura ajustada para que fiquem lado a lado */
+}
+
+/* Estilo específico para o Editor */
+#editor {
+    background-color: #101318;
+    color: #f8f8f2;
+    margin-right: 1%; /* Espaço entre o editor e o output */
+    flex-shrink: 0;
+    border: 5px solid #44475a; /* Borda escura ao redor do editor */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Sombra suave */
+}
+
+/* Estilo específico para o Output */
+#output {
+    background-color: #44475a;
+    color: #f8f8f2;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Sombra suave */
+    border: 2px solid #101318; /* Borda mais clara ao redor do output */
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+/* Removendo o efeito de expansão no hover */
+#editor:hover, #output:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); /* Mantém a sombra ao passar o mouse */
+}
+
+/* Ajustes no botão "Executar" */
+#executar {
+    padding: 12px 24px;   
+    background-color: #3e3e3e; 
+    color: #f8f8f2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#executar:hover {
+    
+    transform: scale(1.2);
+}
+
+#executar:active {
+    transform: scale(0.95);
+}
+
+/* Melhorando a visibilidade da área de saída */
+#output {
+    max-height: 50vh;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+/* Escondendo a descrição de início */
+.hidden {
+    display: none;
+}
+
+/* Esconde os elementos inicialmente */
+#description-text, #output, #editor, #executar, p.hidden {
+    display: none;
+}
